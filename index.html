@@ -3,27 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GET Request Content</title>
+  <title>Text Generator API</title>
   <script>
-    // Функция для получения параметра 'content' из GET-запроса
-    function getContentFromQuery() {
-      const urlParams = new URLSearchParams(window.location.search); // Получаем параметры из URL
-      const getpost = urlParams.get('content'); // Получаем значение параметра 'content'
+    // Функция для получения параметров из URL и отправки запроса
+    async function sendRequest() {
+      // Получаем параметры из URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const headersLol = urlParams.get('headers-lol'); // Получаем значение параметра 'headers-lol'
+      const textLol = urlParams.get('text-lol'); // Получаем значение параметра 'text-lol'
       
-      // Если параметр 'content' найден, отображаем его
-      if (getpost) {
-        document.getElementById('content').textContent = 'Received content: ' + getpost;
+      // Проверяем, что оба параметра присутствуют
+      if (headersLol && textLol) {
+        // Формируем запрос к API
+        try {
+          const resp = await fetch('https://api.deepai.org/api/text-generator', { 
+            method: 'POST',
+            headers: {
+              'Api-Key': headersLol, // Параметр 'headers-lol' как API ключ
+              'Content-Type': 'application/json' // Устанавливаем тип контента
+            },
+            body: JSON.stringify({
+              text: textLol, // Параметр 'text-lol' как текст для генерации
+            })
+          });
+
+          // Получаем ответ и отображаем
+          const data = await resp.json();
+          
+          // Отображаем результат на странице
+          document.getElementById('result').textContent = data.output || "No output received";
+        } catch (error) {
+          document.getElementById('result').textContent = "Error: " + error.message;
+        }
       } else {
-        document.getElementById('content').textContent = 'No content received';
+        document.getElementById('result').textContent = "Missing parameters in the URL!";
       }
     }
-    
-    // Вставляем значение 'content' в элемент с id='content' при загрузке страницы
-    window.onload = getContentFromQuery;
+
+    // Выполняем запрос после загрузки страницы
+    window.onload = sendRequest;
   </script>
 </head>
 <body>
-  <h1>Welcome to the GET Request Handler</h1>
-  <p id="content">Waiting for content...</p>
+  <h1>DeepAI Text Generator</h1>
+  <p id="result">Loading result...</p>
 </body>
 </html>
