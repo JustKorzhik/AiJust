@@ -29,9 +29,15 @@
 
           // Получаем ответ и отображаем
           const data = await resp.json();
-          
+
           // Отображаем результат на странице
-          document.getElementById('result').textContent = data.output || "No output received";
+          const resultContainer = document.getElementById('result');
+          resultContainer.textContent = "Generated text: " + (data.output || "No output received");
+
+          // Также выводим ответ на сам сайт
+          const apiResponseContainer = document.getElementById('apiResponse');
+          apiResponseContainer.textContent = JSON.stringify(data, null, 2); // Форматируем JSON ответ для отображения
+          
         } catch (error) {
           document.getElementById('result').textContent = "Error: " + error.message;
         }
@@ -47,5 +53,7 @@
 <body>
   <h1>DeepAI Text Generator</h1>
   <p id="result">Loading result...</p>
+  <h2>API Response:</h2>
+  <pre id="apiResponse">Waiting for API response...</pre>
 </body>
 </html>
