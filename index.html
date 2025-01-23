@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GET Request Content</title>
+  <script>
+    // Функция для получения параметра 'content' из GET-запроса
+    function getContentFromQuery() {
+      const urlParams = new URLSearchParams(window.location.search); // Получаем параметры из URL
+      const getpost = urlParams.get('content'); // Получаем значение параметра 'content'
+      
+      // Если параметр 'content' найден, отображаем его
+      if (getpost) {
+        document.getElementById('content').textContent = 'Received content: ' + getpost;
+      } else {
+        document.getElementById('content').textContent = 'No content received';
+      }
+    }
+    
+    // Вставляем значение 'content' в элемент с id='content' при загрузке страницы
+    window.onload = getContentFromQuery;
+  </script>
+</head>
+<body>
+  <h1>Welcome to the GET Request Handler</h1>
+  <p id="content">Waiting for content...</p>
+</body>
+</html>
